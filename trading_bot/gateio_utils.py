@@ -5,7 +5,6 @@ from datetime import datetime
 from gate_api.exceptions import ApiException, GateApiException
 
 
-logging.basicConfig(format="%(asctime)s: %(message)s", level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
@@ -77,5 +76,5 @@ class ExchangeApi:
 
 if __name__ == '__main__':
     api = ExchangeApi()
-    api.get_candle_stick(contract="BTC_USDT", interval="1h", limit=10,)
+    api.get_candle_stick(contract="BTC_USDT", interval="1h", limit=10)
 
