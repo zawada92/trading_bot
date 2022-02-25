@@ -14,14 +14,15 @@ class Bot():
 
     def __init__(self) -> None:
         self.exchange_api = ExchangeApi()
+        self.contract = "BTC_USDT"
         self.df = pd.DataFrame(
                     self.exchange_api.get_candle_stick(
-                    contract="BTC_USDT",
+                    contract=self.contract,
                     interval="1h",
                     limit=10))
 
 
 if __name__ == '__main__':
     bot = Bot()
-    PlotData.plot_ohlc(bot.df)
+    PlotData.plot_ohlc(bot.df, bot.contract)
 

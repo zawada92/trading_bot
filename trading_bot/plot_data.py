@@ -1,10 +1,11 @@
+import logging
+import pandas as pd
 import plotly.graph_objects as go
 
-import pandas as pd
-
-from os import name
 from plotly.subplots import make_subplots
 
+
+logger = logging.getLogger(__name__)
 
 class PlotData():
     """Visualization class using plotly express."""
@@ -13,7 +14,7 @@ class PlotData():
         pass
 
     @classmethod
-    def plot_ohlc(self, df: pd.DataFrame) -> None:
+    def plot_ohlc(self, df: pd.DataFrame, contract: str) -> None:
         """Plot OHLC data.
         
         Params:
@@ -34,7 +35,7 @@ class PlotData():
 
         fig.update_layout(
         title = {
-            'text': 'btc_usdt',
+            'text': contract,
             'y':0.9,
             'x':0.5,
             'xanchor': 'center',
@@ -45,5 +46,6 @@ class PlotData():
             color = "#7f7f7f")
         )
 
+        logger.info("Plot OHLC data. Pair: %s", contract)
         fig.show()
 
