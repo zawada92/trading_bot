@@ -8,7 +8,11 @@ from plotly.subplots import make_subplots
 logger = logging.getLogger(__name__)
 
 class PlotData():
-    """Visualization class using plotly express."""
+    """Visualization class using plotly express.
+    
+    Methods:
+    plot_ohlc(df, Contract):
+        Plot OHLC data."""
 
     def __init__(self) -> None:
         pass

@@ -9,7 +9,17 @@ logger = logging.getLogger(__name__)
 
 
 class ExchangeApi:
-    """Util class for crypto exchange interactions."""
+    """Util class for crypto exchange interactions.
+    
+    Attributes:
+        configuration(Configurationa): API configuration
+        api_client(ApiClient): API client
+        api_instance(SpotApi): Spot API instance
+        settle(str): Settle currency
+
+    Methods:
+    get_candle_stick(contract, interval, limit=100):
+        Download data in candle stick format (ohlc)"""
 
     def __init__(self) -> None:
         # Defining the host is optional and defaults to:
