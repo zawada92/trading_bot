@@ -18,12 +18,19 @@ class PlotData():
         pass
 
     @classmethod
-    def plot_ohlc(self, df: pd.DataFrame, contract: str) -> None:
+    def plot_ohlc(
+        self,
+        df: pd.DataFrame,
+        contract: str,
+        ema20: bool = False
+    ) -> None:
         """Plot OHLC data.
         
         Params:
             df(pd.DataFrame): Data.
-        """
+            contract(str): Currency pair contract.
+            ema20(bool): If EMA20 should be shown on screen
+                (default False)"""
         fig = make_subplots(rows=1, cols=1)
 
         fig.add_trace(
@@ -36,6 +43,18 @@ class PlotData():
                 name='coin'),
             row=1,
             col=1)
+
+        if (ema20):
+            fig.add_trace(
+                go.Scatter(
+                    x=df['time'],
+                    y=df['ema20'],
+                    name='ema20',
+                    mode = 'lines',
+                    marker = dict(color = 'black', size = 4)),
+                row=1,
+                col=1
+            )
 
         fig.update_layout(
         title = {

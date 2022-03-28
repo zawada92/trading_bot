@@ -108,9 +108,12 @@ class StrategyHammer (Strategy):
         """
         above = True
         below = True
-        lows = self.df['low'][-self.tail_len:]
-        highs = self.df['high'][-self.tail_len:]
-        emas = self.df['ema20'][-self.tail_len:]
+        # Ignore last two candles. Last one is latest and assume
+        # not closed. And the one before last should cross EMA20
+        # according to strategy conditions.
+        lows = self.df['low'][-(self.tail_len + 2) : -2]
+        highs = self.df['high'][-(self.tail_len + 2) : -2]
+        emas = self.df['ema20'][-(self.tail_len + 2) : -2]
         for l, h, ema in zip(lows, highs, emas):
             if l < ema:
                 above = False
@@ -130,7 +133,6 @@ class StrategyHammer (Strategy):
             bool: True if conditions met. False otherwise.
         """
         trend = self._check_cdl_vs_ema()
-        trend = EmaPlacement.BELOW
         if(trend != EmaPlacement.CROSSED):
             #TODO find our target candle which we are checking. Make it a dict.
             l = self.df['low'].iloc[-2]
