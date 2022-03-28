@@ -37,8 +37,8 @@ class Bot():
         """Starts automated trading."""
         indicators = Indicators()
         indicators.add_atr(self.df)
-        # Add EMA 50 for hammer strategy
-        indicators.add_ema(self.df, 50)
+        # Add EMA 20 for hammer strategy
+        indicators.add_ema(self.df, 20)
 
         strategy_hammer = StrategyHammer(self.df)
         strategy_hammer.start()

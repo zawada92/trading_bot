@@ -16,7 +16,7 @@ class EmaPlacement(Enum):
 
 class StrategyHammer (Strategy):
     """Hammer strategy API.
-    C - 38.2 candle with wick crossing EMA50
+    C - 38.2 candle with wick crossing EMA20
     E - Entry is that candle close or close to this value
     S - If ATR is above 100 then 50 pips below entry.
         Otherwise 20 pips below.
@@ -52,14 +52,21 @@ class StrategyHammer (Strategy):
         Check if strategy setup is ready. We have our CEST.
     """
 
-    def __init__(self, df: DataFrame, market_order: bool = False) -> None:
+    def __init__(
+        self,
+        df: DataFrame,
+        tail_len: int = 6,
+        market_order: bool = False
+    ) -> None:
         """Params:
             df(DataFrame): Exchange data.
+            tail_len(int): Number of last candles to check if EMA is 
+                above/below(default 6)
             market_order(bool): If order entry is market order
-            (default False)"""
-
+                (default False)"""
         super().__init__(df)
         self.market_order = market_order
+        self.tail_len = tail_len
         self._pips = 0 # used to calculate stop loss and target 
         # TODO improve pips implementation.
 
@@ -92,21 +99,18 @@ class StrategyHammer (Strategy):
 
         return False
 
-    def _check_cdl_vs_ema(self, tail_len: int = 6) -> int:
+    def _check_cdl_vs_ema(self) -> int:
         """Checks last candles placement compared to EMA value.
         If candles are above or below EMA.
         
-        Params:
-            tail_len(int): Number of last candles to check(default 6)
-            
         Returns:
             int: EmaPlacement ABOVE or BELOW.
         """
         above = True
         below = True
-        lows = self.df['low'][-tail_len:]
-        highs = self.df['high'][-tail_len:]
-        emas = self.df['ema50'][-tail_len:]
+        lows = self.df['low'][-self.tail_len:]
+        highs = self.df['high'][-self.tail_len:]
+        emas = self.df['ema20'][-self.tail_len:]
         for l, h, ema in zip(lows, highs, emas):
             if l < ema:
                 above = False
@@ -134,7 +138,7 @@ class StrategyHammer (Strategy):
             c = self.df['close'].iloc[-2]
             o = self.df['open'].iloc[-2]
             atr = self.df['atr'].iloc[-2]
-            ema50 = self.df['ema50'].iloc[-2]
+            ema20 = self.df['ema20'].iloc[-2]
             hammer = self._is_hammer(o, h, l, c)
             if atr > 100:
                 self._pips = 50
@@ -143,10 +147,10 @@ class StrategyHammer (Strategy):
 
             if hammer and atr < 3000:
                 if trend == EmaPlacement.ABOVE:
-                    if l < ema50:
+                    if l < ema20:
                         return True
                 if trend == EmaPlacement.BELOW:
-                    if h > ema50:
+                    if h > ema20:
                         return True
 
         return False
