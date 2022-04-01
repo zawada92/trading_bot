@@ -142,12 +142,15 @@ class StrategyHammer (Strategy):
             atr = self.df['atr'].iloc[-2]
             ema20 = self.df['ema20'].iloc[-2]
             hammer = self._is_hammer(o, h, l, c)
-            if atr > 100:
-                self._pips = 50
+            # 1 pip is 1/10000 of price
+            pip_val = c*0.0001
+            atr_pips = atr/pip_val
+            if atr_pips > 100:
+                self._pips = 50 * pip_val
             else:
-                self._pips = 20
+                self._pips = 20 * pip_val
 
-            if hammer and atr < 3000:
+            if hammer and atr_pips < 300:
                 if trend == EmaPlacement.ABOVE:
                     if l < ema20:
                         return True
