@@ -1,8 +1,8 @@
 import logging
 
 from enum import Enum
-from pandas import DataFrame
 from strategy import Strategy
+from live_data import LiveData
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +24,8 @@ class StrategyHammer (Strategy):
         Otherwise 20 pips above.
         
     Attributes:
-        df(DataFrame): Exchange data.
+        live_data(LiveData): Exchange data object with real time
+            refreshing data.
         entry(float): Order entry value.
         stop_loss(float): Order stop loss value.
         target(float): Order target profit value.
@@ -54,17 +55,18 @@ class StrategyHammer (Strategy):
 
     def __init__(
         self,
-        df: DataFrame,
+        live_data: LiveData,
         tail_len: int = 6,
         market_order: bool = False
     ) -> None:
         """Params:
-            df(DataFrame): Exchange data.
+            live_data(LiveData): Exchange data object with real time
+                refreshing data.
             tail_len(int): Number of last candles to check if EMA is 
                 above/below(default 6)
             market_order(bool): If order entry is market order
                 (default False)"""
-        super().__init__(df)
+        super().__init__(live_data)
         self.market_order = market_order
         self.tail_len = tail_len
         self._pips = 0 # used to calculate stop loss and target 
@@ -111,9 +113,9 @@ class StrategyHammer (Strategy):
         # Ignore last two candles. Last one is latest and assume
         # not closed. And the one before last should cross EMA20
         # according to strategy conditions.
-        lows = self.df['low'][-(self.tail_len + 2) : -2]
-        highs = self.df['high'][-(self.tail_len + 2) : -2]
-        emas = self.df['ema20'][-(self.tail_len + 2) : -2]
+        lows = self.live_data.df['low'][-(self.tail_len + 2) : -2]
+        highs = self.live_data.df['high'][-(self.tail_len + 2) : -2]
+        emas = self.live_data.df['ema20'][-(self.tail_len + 2) : -2]
         for l, h, ema in zip(lows, highs, emas):
             if l < ema:
                 above = False
@@ -135,12 +137,12 @@ class StrategyHammer (Strategy):
         trend = self._check_cdl_vs_ema()
         if(trend != EmaPlacement.CROSSED):
             #TODO find our target candle which we are checking. Make it a dict.
-            l = self.df['low'].iloc[-2]
-            h = self.df['high'].iloc[-2]
-            c = self.df['close'].iloc[-2]
-            o = self.df['open'].iloc[-2]
-            atr = self.df['atr'].iloc[-2]
-            ema20 = self.df['ema20'].iloc[-2]
+            l = self.live_data.df['low'].iloc[-2]
+            h = self.live_data.df['high'].iloc[-2]
+            c = self.live_data.df['close'].iloc[-2]
+            o = self.live_data.df['open'].iloc[-2]
+            atr = self.live_data.df['atr'].iloc[-2]
+            ema20 = self.live_data.df['ema20'].iloc[-2]
             hammer = self._is_hammer(o, h, l, c)
             # 1 pip is 1/10000 of price
             pip_val = c*0.0001
@@ -168,7 +170,7 @@ class StrategyHammer (Strategy):
             # self.entry = create_market_order()
             pass
         else:
-            self.entry = self.df["close"].iloc[-2]
+            self.entry = self.live_data.df["close"].iloc[-2]
 
     def _set_stop_loss(self):
         """Sets stop loss value in strategy setup."""

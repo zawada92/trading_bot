@@ -73,7 +73,7 @@ class ExchangeApi:
                                 interval = interval
                             )
 
-            logger.info("Exchange data:\n'{}'".format(api_response))
+            logger.info("Exchange data '{}':\n'{}'".format(contract, api_response))
             keys = ["time", "volume", "close", "high", "low", "open"]
             response = []
 

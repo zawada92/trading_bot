@@ -1,7 +1,8 @@
 import logging
 
 from abc import ABC, abstractmethod
-from pandas import DataFrame
+
+from live_data import LiveData
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +13,8 @@ class Strategy(ABC):
     E - entry, S - stop loss, T - target profit.
 
     Attributes:
-        df(DataFrame): Exchange data.
+        live_data(LiveData): Exchange data object with real time
+            refreshing data.
         entry(float): Order entry value.
         stop_loss(float): Order stop loss value.
         target(float): Order target profit value.
@@ -38,11 +40,12 @@ class Strategy(ABC):
         Check if strategy setup is ready. We have our CEST.
     """
 
-    def __init__(self, df: DataFrame) -> None:
+    def __init__(self, live_data: LiveData) -> None:
         """Params:
-            df(DataFrame): Exchange data"""
+            live_data(LiveData): Exchange data object with real time
+                refreshing data."""
 
-        self.df = df
+        self.live_data = live_data
         self.entry = None
         self.stop_loss = None
         self.target = None
@@ -114,4 +117,9 @@ class Strategy(ABC):
             return True
         
         return False
+
+    def clear(self) -> None:
+        self.entry = None
+        self.stop_loss = None
+        self.target = None
 
