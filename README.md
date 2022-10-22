@@ -5,3 +5,33 @@ Test execution:
 
 Bot start command:
 /home/zawada/projects/trading_bot/env/bin/python /home/zawada/projects/trading_bot/trading_bot/bot.py
+
+
+source /home/zawada/projects/trading_bot/env/bin/activate
+gunicorn --worker-class=gevent -t 99999 "bot_flask:create_app()"
+
+To debug in VSCode add below configuration to launch.json:
+    "configurations": [
+        {
+            "name": "Python: Flask",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": false,
+            "program": "${workspaceRoot}/web_bot/bot_flask/__init__.py",
+            "env": {
+                "FLASK_APP": "${workspaceRoot}/web_bot/bot_flask/__init__.py",
+                "FLASK_ENV": "development",
+                "FLASK_DEBUG": "1",
+                "PYTHONPATH":"${workspaceRoot}"
+            },
+            "args": [
+                "run"
+            ],
+            "envFile": "${workspaceRoot}/.env",
+            "jinja": true
+        }
+    ]
+
+To initialize database:
+export FLASK_APP=bot_flask
+flask init-db

@@ -1,0 +1,4 @@
+include bot_flask/schema.sql
+graft bot_flask/static
+graft bot_flask/templates
+global-exclude *.pyc
