@@ -1,15 +1,13 @@
 {% extends 'base.html' %}
 {% block head %}
-<script type="text/javascript">
+  <script type="text/javascript">
 
-window.onload = function () {
-  var data = {{ df|tojson }};
-  var graphDiv = document.getElementById('graph')
-  console.log(data)
-  Plotly.newPlot( graphDiv, data);
-}
+    window.onload = function () {
+      var data = {{ df|tojson }};
+      var graphDiv = document.getElementById('graph')
+      Plotly.newPlot( graphDiv, data);
+    }
   </script>
-  <!-- <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script> -->
   <script src="https://cdn.plot.ly/plotly-2.12.1.min.js"></script>
 {% endblock %}
 
@@ -34,9 +32,6 @@ window.onload = function () {
 {% endblock %}
 
 {% block content %}
-  <!-- TODO show graph with responsive design -->
   <div id="graph" class="my-4 w-100 chartjs-render-monitor" style="display: block; width: 1492px; height: 629px;" width="1492" height="629"></div>
-  <!-- <div id="chartContainer" style="height: 300px; width: 100%;"></div> -->
-  <!-- <canvas class="my-4 w-100 chartjs-render-monitor" id="myChart" style="display: block; width: 1492px; height: 629px;" width="1492" height="629"></canvas> -->
 
 {% endblock %}

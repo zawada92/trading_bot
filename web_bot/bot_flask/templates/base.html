@@ -106,10 +106,8 @@
       function sse() {
           var source = new EventSource('/notifications/stream');
           var user = '{{ g.user['id'] }}';
-          var liste = "notify_" + user;
-          console.log(liste);
-          source.addEventListener(liste, (e) => {
-            console.log(e.data)
+          var listener_name = "notify_" + user;
+          source.addEventListener(listener_name, (e) => {
             alert(e.data)
           });
       }
