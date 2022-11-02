@@ -6,9 +6,13 @@ Test execution:
 Bot start command:
 /home/zawada/projects/trading_bot/env/bin/python /home/zawada/projects/trading_bot/trading_bot/bot.py
 
-
-source /home/zawada/projects/trading_bot/env/bin/activate
-gunicorn --worker-class=gevent -t 99999 "bot_flask:create_app()"
+Activate environment:
+    source /home/zawada/projects/trading_bot/env/bin/activate
+To initialize database:
+    export FLASK_APP=bot_flask
+    flask init-db
+To start with gunicorn:
+    gunicorn --worker-class=gevent -t 99999 "bot_flask:create_app()"
 
 To debug in VSCode add below configuration to launch.json:
     "configurations": [
@@ -32,6 +36,4 @@ To debug in VSCode add below configuration to launch.json:
         }
     ]
 
-To initialize database:
-export FLASK_APP=bot_flask
-flask init-db
+

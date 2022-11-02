@@ -25,7 +25,7 @@ class Interval:
 
 class ExchangeApi:
     """Util class for crypto exchange interactions.
-    
+
     Attributes:
         configuration(Configurationa): API configuration
         api_client(ApiClient): API client
@@ -40,18 +40,15 @@ class ExchangeApi:
         # Defining the host is optional and defaults to:
         # https://api.gateio.ws/api/v4
         self.configuration = gate_api.Configuration(
-            host = "https://api.gateio.ws/api/v4"
+            host="https://api.gateio.ws/api/v4"
         )
         self.api_client = gate_api.ApiClient(self.configuration)
         # Create an instance of the API class
         self.api_instance = gate_api.SpotApi(self.api_client)
-        self.settle = 'usdt' # str | Settle currency
+        self.settle = "usdt"  # str | Settle currency
 
     def get_candle_stick(
-        self,
-        contract: str,
-        interval: str,
-        limit: int = 100
+        self, contract: str, interval: str, limit: int = 100
     ) -> list:
         """Download data in candle stick format (ohlc) for crypto pair,
         f.e. BTC_USDT.
@@ -68,22 +65,22 @@ class ExchangeApi:
         try:
             pair = self.api_instance.get_currency_pair(contract)
             api_response = self.api_instance.list_candlesticks(
-                                currency_pair = contract,
-                                limit = limit,
-                                interval = interval
-                            )
+                currency_pair=contract, limit=limit, interval=interval
+            )
 
-            logger.info("Exchange data '{}':\n'{}'".format(contract, api_response))
+            logger.info(
+                "Exchange data '{}':\n'{}'".format(contract, api_response)
+            )
             keys = ["time", "volume", "close", "high", "low", "open"]
             response = []
 
             for item in api_response:
-                dict_item = dict (zip(keys, item))
+                dict_item = dict(zip(keys, item))
                 dict_item["time"] = datetime.fromtimestamp(
-                                        int(dict_item["time"])
-                                    ).strftime('%H:%M %d.%m.%y')
+                    int(dict_item["time"])
+                ).strftime("%H:%M %d.%m.%y")
 
-                for k,v in dict_item.items():
+                for k, v in dict_item.items():
                     if k != "time":
                         dict_item[k] = float(v)
 
@@ -108,7 +105,7 @@ class ExchangeApi:
         interval: str,
         start: datetime,
         end: datetime,
-        limit: int = 100
+        limit: int = 100,
     ) -> list:
         """Download data in candle stick format (ohlc) for crypto pair,
         f.e. BTC_USDT in specific time range.
@@ -119,7 +116,7 @@ class ExchangeApi:
             start(datetime): Start of time range
             end(datetime): End of time range
             limit(int): Irrelevant. Conflicts with start/end
-                (default 100)
+                (default 100).
 
         Returns:
             list: List of dictionary items with OHLC format data from
@@ -130,24 +127,24 @@ class ExchangeApi:
             timestamp1 = start.replace(tzinfo=timezone.utc).timestamp()
             timestamp2 = end.replace(tzinfo=timezone.utc).timestamp()
             api_response = self.api_instance.list_candlesticks(
-                                currency_pair = contract,
-                                limit = limit,
-                                _from = int(timestamp1),
-                                to = int(timestamp2),
-                                interval = interval
-                            )
+                currency_pair=contract,
+                limit=limit,
+                _from=int(timestamp1),
+                to=int(timestamp2),
+                interval=interval,
+            )
 
             logger.info("Exchange data:\n'{}'".format(api_response))
             keys = ["time", "volume", "close", "high", "low", "open"]
             response = []
 
             for item in api_response:
-                dict_item = dict (zip(keys, item))
+                dict_item = dict(zip(keys, item))
                 dict_item["time"] = datetime.fromtimestamp(
-                                        int(dict_item["time"])
-                                    ).strftime('%H:%M %d.%m.%y')
+                    int(dict_item["time"])
+                ).strftime("%H:%M %d.%m.%y")
 
-                for k,v in dict_item.items():
+                for k, v in dict_item.items():
                     if k != "time":
                         dict_item[k] = float(v)
 
@@ -167,7 +164,6 @@ class ExchangeApi:
             )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     api = ExchangeApi()
     api.get_candle_stick(contract="BTC_USDT", interval="1h", limit=10)
-
