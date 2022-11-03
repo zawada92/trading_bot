@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block head %}
+{% endblock %}
+
+{% block header %}
+<h1 class="h2">Notifications</h1>
+  
+
+{% endblock %}
+
+{% block content %}
+<form method="post">
+  <div class="input-group btn-group mb-3">
+    <label class="input-group-text" for="contract">Contract</label>
+    <select class="form-select btn-group" id="contract" name="contract" required>
+      <option selected value="BTC_USDT">BTC_USDT</option>
+      <option value="ETH_USDT">ETH_USDT</option>
+    </select>
+  </div>
+
+  <div class="input-group btn-group mb-3">
+    <label class="input-group-text" for="trend">Trend</label>
+    <select class="form-select btn-group" id="trend" name="trend" required>
+      <option value="0">Up trend</option>
+      <option value="1">Down Trend</option>
+    </select>
+  </div>
+
+  <div class="input-group mb-3">
+    <span class="input-group-text">$ price</span>
+    <span class="input-group-text">0.00</span>
+    <input type="number" class="form-control" aria-label="Dollar amount (with dot and decimal places)" name="price" id="price" step="any" required>
+  </div>
+
+  <button type="submit" class="btn btn-primary" value="Register">Create</button>
+
+</form>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Edit price from: "{{ notification['price'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form action="{{ url_for('notifications.update', id=notification['id']) }}" method="post">
+
+  <div class="input-group mb-3">
+    <span class="input-group-text">$ price</span>
+    <span class="input-group-text">0.00</span>
+    <input type="number" value="{{ notification['price'] }}" class="form-control" aria-label="Dollar amount (with dot and decimal places)" name="price" id="price" step="any" required>
+  </div>
+  <button type="submit" class="btn btn-primary" value="Save">Save</button>
+</form>
+<hr>
+{% endblock %}

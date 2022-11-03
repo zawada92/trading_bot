@@ -104,3 +104,7 @@ env*
 
 # vscode settings
 .vscode/**
+
+# database
+*.db
+*.db-journal
